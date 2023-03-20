@@ -1,0 +1,21 @@
+* {
+	margin: 0;
+	padding: 0;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+a, input, button {
+	font: inherit;
+	text-decoration: inherit;
+	border: none;
+	background-color: transparent;
+}
+
+button {
+	cursor: pointer;
+}
+
+body {
+	background-color: white;
+}

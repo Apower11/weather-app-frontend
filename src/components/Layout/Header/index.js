@@ -2,12 +2,8 @@ import './style.css';
 
 const Header = () => (
    <header>
-      <ul>
-         <li>placeholder</li>
-      </ul>
-      <ul>
-         <li>placeholder</li>
-      </ul>
+      <button class='material-symbols-outlined'>menu</button>
+      <button class='material-symbols-outlined'>tune</button>
    </header>
 );
 

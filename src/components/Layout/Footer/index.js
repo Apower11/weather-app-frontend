@@ -1,9 +1,15 @@
-import './style.css';
+import style from './style.css';
 
 const Footer = () => (
    <footer>
-      <span>Copyright &copy; 2023</span>
-      <span><a target='_blank' rel='noreferrer' href='https://github.com/bennoprice/weatherapp'>GitHub</a></span>
+      <div class={style.nav}>
+         <span class={style.dot} />
+         <span class={style.dot + ' ' + style.active} />
+         <span class={style.dot} />
+         <span class={style.dot} />
+         <span class={style.dot} />
+         <span class={style.dot} />
+      </div>
    </footer>
 );
 

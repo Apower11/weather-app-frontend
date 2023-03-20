@@ -1,32 +1,8 @@
-.App {
-   font-family: monospace;
-   font-size: 1.25em;
+.app {
+   font-family: 'Ubuntu', sans-serif;
+   /*min-height: -webkit-fill-available;*/
    min-height: 100vh;
-   color: #e7e7e7;
+   color: #555555;
    display: flex;
    flex-flow: column;
-}
-
-body {
-   background-color: #191a19
-}
-
-button {
-   border-radius: 0.3em;
-   background-color: #60cc4a;
-   padding: 0.4em 0.7em;
-   color: #191a19;
-}
-
-button:enabled:hover {
-   background-color: #64d44e;
-}
-
-button:disabled {
-   opacity: 0.7;
-   cursor: default;
-}
-
-a {
-   color: #60cc4a;
 }

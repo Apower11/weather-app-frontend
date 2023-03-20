@@ -1,19 +1,18 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Timeline from "../Timeline";
-import NotFound from "../404";
-import Layout from "../Layout";
-import './style.css';
+import { Router } from 'preact-router';
+import Timeline from '../Timeline';
+import Layout from '../Layout';
+import NotFound from '../404';
+import style from './style.css';
 
 const App = () => (
-   <div className="App">
-      <Layout>
-         <Routes>
-            <Route index element={<Navigate to='timeline/1' replace />} />
-            <Route path='timeline/:id' element={<Timeline />} />
-            <Route path="*" element={<NotFound />} />
-         </Routes>
-      </Layout>
-   </div>
+	<div class={style.app}>
+		<Layout>
+			<Router>
+				<Timeline path="/" />
+				<NotFound default />
+			</Router>
+		</Layout>
+	</div>
 );
 
 export default App;
