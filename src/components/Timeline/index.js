@@ -28,7 +28,6 @@ const Timeline = () => {
       });
       
       setEvents(arr);
-
    };
 
    return (
@@ -40,10 +39,9 @@ const Timeline = () => {
          </div>
 
          <div class={style.add}>
-            <div class={style.left}>
-               <button type='button' onClick={() => setModal(true)}>+</button>
-            </div>
-            <div class={style.right}></div>
+            <div class={style.left} />
+            <button type='button' onClick={() => setModal(true)}>+</button>
+            <div class={style.right} />
          </div>
 
          {modal && <Modal close={() => setModal(false)} complete={addEvent} /> }
