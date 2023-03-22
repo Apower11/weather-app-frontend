@@ -70,7 +70,7 @@ const Auth = () => {
         <Button type="primary" htmlType="submit" className="login-form-button">
           Log in
         </Button>
-        Or <a href="/register">register now!</a>
+        <span className={style.alternative_text}>Or <a href="/register">register now!</a></span>
       </Form.Item>
     </Form>
   );

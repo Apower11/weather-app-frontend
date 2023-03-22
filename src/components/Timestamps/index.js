@@ -5,7 +5,7 @@ import axios from 'axios';
 // import axios from 'axios';
 // import style from './style.css';
 
-const Timestamps = ({ timestamps }) => {
+const Timestamps = ({ timestamps, timelineDate }) => {
     const [fullTimestamps, setFullTimestamps] = useState([]);
     const [value, setValue] = useState("");
 
@@ -23,7 +23,7 @@ const Timestamps = ({ timestamps }) => {
 
    return (
     timestamps.map((item, index) => (
-        <Event data={item}/>
+        <Event timelineDate={timelineDate} data={item}/>
      ))
    );
 };

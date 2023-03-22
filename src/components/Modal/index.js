@@ -7,6 +7,8 @@ const Modal = ({ close, complete, timelineId, timelineDate }) => {
    const [time, setTime] = useState('');
    const [name, setName] = useState('');
    const [location, setLocation] = useState('');
+   const [showErrorMessage, setShowErrorMessage] = useState(false);
+   const [errorMessage, setErrorMessage] = useState("");
 
    let theDate = new Date(timelineDate);
    let todaysDate = new Date(Date.now() - 604800000);
@@ -50,14 +52,7 @@ const Modal = ({ close, complete, timelineId, timelineDate }) => {
       console.log("Data 1: " + timelineId);
 
       getCoords(location).then(async coords => {
-         console.log(`${api}?latitude=${coords.lat}&longitude=${coords.lng}&hourly=temperature_2m,weathercode&start_date=${timelineDate}&end_date=${timelineDate}`);
-         jetch(`${api}?latitude=${coords.lat}&longitude=${coords.lng}&hourly=temperature_2m,weathercode&start_date=${timelineDate}&end_date=${timelineDate}`)
-         .then(async e => {
-              console.log(e);
-              console.log(e.hourly.temperature_2m[2]);
-              console.log(parseInt(time.split(":")[0]).toString());
-              console.log(e.hourly.temperature_2m[parseInt(time.split(":")[0])]);
-              console.log(parseWeatherCode(e.hourly.weathercode[parseInt(time.split(":")[0])], time));
+            jetch(`${api}?latitude=${coords.lat}&longitude=${coords.lng}&hourly=temperature_2m,weathercode&start_date=${timelineDate}&end_date=${timelineDate}`).then(async e => {
               await axios.post('https://weatherapp-group34-backend-api.herokuapp.com/timeline/createTimestamp', {
                timelineId: timelineId,
                time: time,
@@ -75,9 +70,13 @@ const Modal = ({ close, complete, timelineId, timelineDate }) => {
                console.log(err);
             })
          });
+         close();
+         }).catch(err => {
+            console.log("Something went wrong!");
+            setErrorMessage("The location you entered is invalid. Please try again by typing in a valid location address.");
+            setShowErrorMessage(true);
          });
       // complete({});
-      close();
    };
 
    const getCoords = async address => {
@@ -97,7 +96,7 @@ const Modal = ({ close, complete, timelineId, timelineDate }) => {
                <button class={style.cancel} type='button' onClick={close}>Cancel</button>
                <button class={style.add} type='button' onClick={submit} disabled={!filled}>Add</button>
             </div>
-
+            {showErrorMessage ? <h4>{errorMessage}</h4> : null}
             <input type='time' placeholder='Name' value={time} onInput={e => setTime(e.target.value)} />
             <input type='text' placeholder='Name' value={name} onInput={e => setName(e.target.value)} />
             <input type='text' placeholder='Location' value={location} onInput={e => setLocation(e.target.value)} />

@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useState, useContext } from 'preact/hooks';
+import { usePreferences } from '../../shared/hooks/preferences-hook';
+import { PreferencesContext } from '../../shared/context/preferences-context';
 import parseWeatherCode from './parseCode';
+import TimestampDetails from '../TimestampDetails';
 import axios from 'axios';
 import style from './style.css';
 
@@ -19,12 +22,16 @@ const oneDecimal = temp => (
    parseFloat(temp).toFixed(1)
 );
 
-const Event = ({ data }) => {
+const Event = ({ data, timelineDate }) => {
    let time = '11:15';
-   const [weather, setWeather] = useState({temp: "11.1", ...parseWeatherCode(0, time)});
+   const { changeToCelsius, changeToFahrenheit, temperatureMeasurement } = usePreferences();
+   const [weather, setWeather] = useState({temp: data.temperature, ...parseWeatherCode(0, time)});
    const [ready, setReady] = useState(false);
    const [value, setValue] = useState("");
    const [timestamp, setTimestamp] = useState({});
+   const [timestampModal, setTimestampModal] = useState(false);
+
+   const preferences = useContext(PreferencesContext);
 
    const getWeatherTimestamp = async () => {
       const response = await axios.get(`https://weatherapp-group34-backend-api.herokuapp.com/timeline/getTimestamp/${data}`);
@@ -32,10 +39,17 @@ const Event = ({ data }) => {
       setWeather({temp: response.data.timestamp.temperature, ...parseWeatherCode(response.data.timestamp.weatherCode, response.data.timestamp.time)})
    }
 
+   console.log(temperatureMeasurement);
+
    useEffect(() => {
       getWeatherTimestamp();
+      console.log(temperatureMeasurement);
    }, [value, data])
    setReady(true);
+
+   const closeTimestampModal = () => {
+      setTimestampModal(false);
+   }
 
 
 
@@ -58,11 +72,13 @@ const Event = ({ data }) => {
 
    return (
       <div class={style.event}>
+         {timestampModal ? <TimestampDetails close={closeTimestampModal} timelineDate={timelineDate} timestamp={timestamp} /> : undefined}
          <div class={style.left}>
             <div class={style.wrapper}>
                <div>
                   <span class={style.time}>{timestamp.time}</span>
                   <span class={style.name}>{timestamp.name}</span>
+                  <button onClick={() => setTimestampModal(!timestampModal)} class={style.more_details_button}>More Details</button>
                </div>
             </div>
          </div>
@@ -76,8 +92,8 @@ const Event = ({ data }) => {
                </div>
                <div class={style.temp}>
                   <span>
-                     <span class={style.num}>{oneDecimal(timestamp.temperature)}</span>
-                     <span class={style.degrees}>&#176;C</span>
+                     <span class={style.num}>{oneDecimal(preferences.temperatureMeasurement == 'celsius' ? timestamp.temperature : (timestamp.temperature * 9/5) + 32)}</span>
+                     <span class={style.degrees}>{preferences.temperatureMeasurement == 'celsius' ? "°C" : "°F"}</span>
                   </span>
                   <span class={style.condition}>{timestamp.conditions}</span>
                </div>

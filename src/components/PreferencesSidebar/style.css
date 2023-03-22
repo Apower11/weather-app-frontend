@@ -1,0 +1,71 @@
+.modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    display: flex;
+    justify-content: flex-end;
+    backdrop-filter: blur(0.3em);
+ }
+
+ .modal a {
+   color: #007aff;
+ }
+ 
+ .container {
+    background-color: #fafafa;
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+    width: 200px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1em;
+ }
+
+ .container div {
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   gap: 0.4em;
+ }
+ 
+ .control {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 0.2em;
+ }
+ 
+ .modal button {
+    color: #007aff;
+ }
+
+ .submitButton {
+    background-color: #007aff;
+    border-radius: 0.7em;
+    padding: 0.4em;
+    color: white !important;
+    width: 100%;
+ }
+ 
+ .modal button:disabled {
+    color: #c3c3c5;
+ }
+ 
+ .modal input {
+    background-color: #eaeaeb;
+    color: #4e4e54;
+    padding: 0.4em;
+    border-radius: 0.4em;
+ }
+ 
+ .modal input::placeholder {
+    color: #9b9b9e;
+ }
+
+ .temperature_switch {
+   flex-direction: row !important;
+ }

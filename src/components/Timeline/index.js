@@ -7,6 +7,7 @@ import axios from 'axios';
 import { route } from 'preact-router';
 import style from './style.css';
 import { useAuth } from '../../shared/hooks/auth-hooks';
+import { usePreferences } from '../../shared/hooks/preferences-hook';
 import { useState, useEffect } from 'preact/hooks';
 
 const Timeline = ({timelineDate}) => {
@@ -189,7 +190,7 @@ const Timeline = ({timelineDate}) => {
             <div class={style.right} />
          </div>
          
-         <Timestamps class={style.container} timestamps={timestamps} />
+         <Timestamps class={style.container} timestamps={timestamps} timelineDate={timelineDate} />
 
          <div class={style.connected}>
             <div class={style.left} />

@@ -6,12 +6,15 @@ import Auth from '../Auth';
 import Register from '../Register';
 import Redirect from '../Redirect';
 import { AuthContext } from '../../shared/context/auth-context';
+import { PreferencesContext } from '../../shared/context/preferences-context';
 import { useAuth } from '../../shared/hooks/auth-hooks';
+import { usePreferences } from '../../shared/hooks/preferences-hook';
 import NotFound from '../404';
 import style from './style.css';
 
 function App() {
 	const {token, login, logout, user} = useAuth();
+	const { changeToCelsius, changeToFahrenheit, temperatureMeasurement } = usePreferences();
 	let routes;
 
 	if(!token) {
@@ -76,9 +79,16 @@ function App() {
       user: user, 
       login: login, 
       logout: logout}}>
-      <React.StrictMode>
+      <PreferencesContext.Provider
+	  value={{
+		temperatureMeasurement: temperatureMeasurement,
+		changeToCelsius: changeToCelsius,
+		changeToFahrenheit: changeToFahrenheit
+	  }}>
+	  <React.StrictMode>
 	  {routes}
 	  </React.StrictMode>
+	  </PreferencesContext.Provider>
     </AuthContext.Provider>
 	)
 }
