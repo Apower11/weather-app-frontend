@@ -12,12 +12,6 @@
 .timeline .add {
    display: flex;
    justify-content: space-between;
-   /*border-radius: 5em;
-   padding: 0.5em 0.5em;
-   font-size: 1.5em;
-   line-height: 0.4em;
-   margin-left: 41%;
-   width: 40px;*/
 }
 
 .timeline .left {
@@ -37,4 +31,24 @@
    margin-right: 0.5em;
    color: #9C9C9C;
    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.timeline .dateNavigator {
+   display: flex;
+   justify-content: space-between;
+}
+
+.timeline .dateNavigator .container {
+   margin-right: 3.5em;
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   justify-content: center;
+}
+
+.timeline .calender {
+   border-radius: 3em;
+   padding: 0.5em;
+   color: #808080;
+   border: 2px solid#a1a1a1;
 }

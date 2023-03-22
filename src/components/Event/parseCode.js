@@ -3,7 +3,7 @@ import style from './style.css';
 const parseWeatherCode = (code, time) => {
    switch (code) {
       case 0:
-         if (time.h > 18 || time.h < 6)
+         if (time.split(":")[0] > 18 || time.split(":")[0] < 6)
             return { icon: 'clear_night', name: 'Clear', style: style.darkblue };
          return { icon: 'sunny', name: 'Clear', style: style.orange };
       case 45:

@@ -1,18 +1,86 @@
 import { Router } from 'preact-router';
+import React from 'react';
 import Timeline from '../Timeline';
 import Layout from '../Layout';
+import Auth from '../Auth';
+import Register from '../Register';
+import Redirect from '../Redirect';
+import { AuthContext } from '../../shared/context/auth-context';
+import { useAuth } from '../../shared/hooks/auth-hooks';
 import NotFound from '../404';
 import style from './style.css';
 
-const App = () => (
-	<div class={style.app}>
-		<Layout>
-			<Router>
-				<Timeline path="/" />
-				<NotFound default />
-			</Router>
-		</Layout>
-	</div>
-);
+function App() {
+	const {token, login, logout, user} = useAuth();
+	let routes;
+
+	if(!token) {
+		routes = (
+			<div class={style.app}>
+				<Layout>
+					<Router>
+						<Auth path="/login" />
+						<Register path="/register" />
+						<Redirect path="/timeline/:timelineDate?" to="/login" />
+						<Redirect path="/" to="/login" />
+						<NotFound default />
+					</Router>
+				</Layout>
+			</div>
+		)
+	} else {
+		routes = (
+			<div class={style.app}>
+			<Layout>
+				<Router>
+					<Timeline path="/timeline/:timelineDate?" />
+					<Redirect path="/login" to="/timeline" />
+					<Redirect path="/register" to="/timeline" />
+					{/* <Redirect path="/timeline" to="/timeline/2023-03-21" /> */}
+					<NotFound default />
+				</Router>
+			</Layout>
+		</div>
+		)
+	}
+
+	// routes = 
+	// (!token)
+	// ? (
+	// 	<div class={style.app}>
+	// 		<Layout>
+	// 			<Router>
+	// 				<Auth path="/login" />
+	// 				<Register path="/register" />
+	// 				<NotFound default />
+	// 			</Router>
+	// 		</Layout>
+	// 	</div>
+	// )
+	// : (
+	// 	<div class={style.app}>
+	// 		<Layout>
+	// 			<Router>
+	// 				<Timeline path="/timeline/:timelineDate?" />
+	// 				<Timeline default />
+	// 			</Router>
+	// 		</Layout>
+	// 	</div>
+	// )
+
+	return (
+		<AuthContext.Provider 
+    value={{
+      isLoggedIn: !!token,
+      token: token,
+      user: user, 
+      login: login, 
+      logout: logout}}>
+      <React.StrictMode>
+	  {routes}
+	  </React.StrictMode>
+    </AuthContext.Provider>
+	)
+}
 
 export default App;

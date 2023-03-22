@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'preact/hooks';
 import parseWeatherCode from './parseCode';
+import axios from 'axios';
 import style from './style.css';
 
 const api = 'https://api.open-meteo.com/v1/forecast';
@@ -18,21 +19,39 @@ const oneDecimal = temp => (
    parseFloat(temp).toFixed(1)
 );
 
-const Event = ({ data: { name, time, coords } }) => {
-   const [weather, setWeather] = useState({});
+const Event = ({ data }) => {
+   let time = '11:15';
+   const [weather, setWeather] = useState({temp: "11.1", ...parseWeatherCode(0, time)});
    const [ready, setReady] = useState(false);
+   const [value, setValue] = useState("");
+   const [timestamp, setTimestamp] = useState({});
+
+   const getWeatherTimestamp = async () => {
+      const response = await axios.get(`https://weatherapp-group34-backend-api.herokuapp.com/timeline/getTimestamp/${data}`);
+      setTimestamp(response.data.timestamp);
+      setWeather({temp: response.data.timestamp.temperature, ...parseWeatherCode(response.data.timestamp.weatherCode, response.data.timestamp.time)})
+   }
 
    useEffect(() => {
-      jetch(`${api}?latitude=${coords.lat}&longitude=${coords.lng}&hourly=temperature_2m,weathercode`)
-         .then(e => {
-            setWeather({
-               temp: e.hourly.temperature_2m[time.h],
-               ...parseWeatherCode(e.hourly.weathercode[time.h], time)
-            });
+      getWeatherTimestamp();
+   }, [value, data])
+   setReady(true);
 
-            setReady(true);
-         });
-   }, [time, coords]);
+
+
+   
+
+   // useEffect(() => {
+   //    jetch(`${api}?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,weathercode`)
+   //       .then(e => {
+   //          setWeather({
+   //             temp: e.hourly.temperature_2m[time.h],
+   //             ...parseWeatherCode(e.hourly.weathercode[time.h], time)
+   //          });
+
+   //          setReady(true);
+   //       });
+   // }, [time, latitude, longitude]);
 
    if (!ready)
       return; // placeholder
@@ -42,8 +61,8 @@ const Event = ({ data: { name, time, coords } }) => {
          <div class={style.left}>
             <div class={style.wrapper}>
                <div>
-                  <span class={style.time}>{formatTime(time)}</span>
-                  <span class={style.name}>{name}</span>
+                  <span class={style.time}>{timestamp.time}</span>
+                  <span class={style.name}>{timestamp.name}</span>
                </div>
             </div>
          </div>
@@ -57,10 +76,10 @@ const Event = ({ data: { name, time, coords } }) => {
                </div>
                <div class={style.temp}>
                   <span>
-                     <span class={style.num}>{oneDecimal(weather.temp)}</span>
+                     <span class={style.num}>{oneDecimal(timestamp.temperature)}</span>
                      <span class={style.degrees}>&#176;C</span>
                   </span>
-                  <span class={style.condition}>{weather.name}</span>
+                  <span class={style.condition}>{timestamp.conditions}</span>
                </div>
             </div>
          </div>
