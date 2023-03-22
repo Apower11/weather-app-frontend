@@ -9,6 +9,7 @@ import { AuthContext } from '../../shared/context/auth-context';
 import { PreferencesContext } from '../../shared/context/preferences-context';
 import { useAuth } from '../../shared/hooks/auth-hooks';
 import { usePreferences } from '../../shared/hooks/preferences-hook';
+import { createHashHistory } from 'history';
 import NotFound from '../404';
 import style from './style.css';
 
@@ -24,7 +25,7 @@ function App() {
 		routes = (
 			<div class={style.app}>
 				<Layout>
-					<Router>
+					<Router history={createHashHistory()}>
 						<Auth path="/login" />
 						<Register path="/register" />
 						<Redirect path="/timeline/:timelineDate?" to="/login" />
@@ -38,7 +39,7 @@ function App() {
 		routes = (
 			<div class={style.app}>
 			<Layout>
-				<Router>
+				<Router history={createHashHistory()}>
 					<Timeline path="/timeline/:timelineDate?" />
 					<Redirect path="/login" to="/timeline" />
 					<Redirect path="/register" to="/timeline" />
