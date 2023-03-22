@@ -39,7 +39,7 @@ const Auth = () => {
           },
         ]}
       >
-        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email Address" />
+        <Input prefix={<UserOutlined className="site-form-item-icon" />} type="email" placeholder="Email Address" />
       </Form.Item>
       <Form.Item
         name="password"

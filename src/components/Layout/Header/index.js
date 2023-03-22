@@ -6,9 +6,11 @@ import { AuthContext } from '../../../shared/context/auth-context';
 import { useState, useContext } from 'preact/hooks';
 
 const Header = () => {
+   // Defines state attributes and methods along with introducing the
+   // authentication context and the attributes stored within it along
+   // with their values.
    const [displaySidebar, setDisplaySidebar] = useState(false);
    const [displayPreferencesSidebar, setDisplayPreferencesSidebar] = useState(false);
-   const {token, login, logout, user} = useAuth();
    const auth = useContext(AuthContext);
    return (
       <header>

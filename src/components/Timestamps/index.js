@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'preact/hooks';
 import Event from '../Event';
 import axios from 'axios';
-// import parseWeatherCode from '../Event/parseCode';
-// import axios from 'axios';
-// import style from './style.css';
 
 const Timestamps = ({ timestamps, timelineDate }) => {
+    // Defines state attribute and setter for fullTimestamps.
     const [fullTimestamps, setFullTimestamps] = useState([]);
-    const [value, setValue] = useState("");
 
+    // Takes all the ids passed in which are ids for certain timestamps and then
+    // gets and stores all the details for all those different timestamps.
     const getTimestamps = () => {
         timestamps.map(async timestamp => {
             const response = await axios.get(`https://weatherapp-group34-backend-api.herokuapp.com/timeline/getTimestamp/${timestamp}`);
@@ -17,6 +16,7 @@ const Timestamps = ({ timestamps, timelineDate }) => {
         })
     }
 
+    
     useEffect(() => {
         getTimestamps();
     }, [timestamps]);

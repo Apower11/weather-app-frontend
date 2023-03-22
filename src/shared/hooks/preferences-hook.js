@@ -1,51 +1,22 @@
 import { useState, useCallback, useEffect } from 'react';
 
-let logoutTimer;
-
 export const usePreferences = () => {
-  const [token, setToken] = useState(false);
-  const [tokenExpirationDate, setTokenExpirationDate] = useState();
-  const [user, setUser] = useState(false);
   const [temperatureMeasurement, setTemperatureMeasurement] = useState("celsius");
 
-//   const login = useCallback((userId, user, token, expirationDate) => {
-//     setToken(token);
-//     setUser(user);
-//     const tokenExpirationDate = expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
-//     setTokenExpirationDate(tokenExpirationDate);
-//     localStorage.setItem('userData', JSON.stringify({ 
-//       userId: userId, 
-//       token: token, 
-//       user: user, 
-//       expiration: tokenExpirationDate.toISOString()
-//      }));
-//   }, []);
-
+  // Changes the temperatureMeasurement state variable value to 'celsius'
   const changeToCelsius = useCallback(() => {
     setTemperatureMeasurement('celsius');
     localStorage.setItem('temperatureMeasurement', JSON.stringify({measurementUnit: "celsius"}));
   }, []);
 
+    // Changes the temperatureMeasurement state variable value to 'fahrenheit'
   const changeToFahrenheit = useCallback(() => {
     setTemperatureMeasurement('fahrenheit');
     localStorage.setItem('temperatureMeasurement', JSON.stringify({measurementUnit: "fahrenheit"}));
   }, []);
 
-//   const getTemperatureMeasurement = useCallback(() => {
-//     setTemperatureMeasurement('fahrenheit');
-//     localStorage.setItem('temperatureMeasurement', JSON.stringify({measurementUnit: "fahrenheit"}));
-//     return JSON.parse(localStorage.getItem('temperatureMeasurement')).measurementUnit;
-//   }, []);
-
-//   useEffect(() => {
-//     if(token && tokenExpirationDate) {
-//       const remainingTime = tokenExpirationDate.getTime() - new Date().getTime();
-//       logoutTimer = setTimeout(logout, remainingTime)
-//     } else {
-//       clearTimeout(logoutTimer);
-//     }
-//   }, [token, logout, tokenExpirationDate])
-
+  // Checks that the temperature measurement preference is being stored in local storage
+  // and also prints to the console what the preference is currently set to.
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem('temperatureMeasurement')).measurementUnit;
     if (

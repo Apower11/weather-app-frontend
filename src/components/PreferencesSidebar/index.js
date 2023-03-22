@@ -7,33 +7,18 @@ import { Switch } from 'antd';
 import style from './style.css';
 
 const PreferencesSidebar = ({ close, complete }) => {
-   const [time, setTime] = useState('');
-   const [name, setName] = useState('');
-   
-   const [location, setLocation] = useState('');
-
-   const { changeToCelsius, changeToFahrenheit, temperatureMeasurement } = usePreferences();
-
-   const auth = useContext(AuthContext);
+   // Gets the preferences context along with it's attributes
+   // and their values.
    const preferences = useContext(PreferencesContext);
 
-   const [filled, setFilled] = useState(false);
-
-   useEffect(() => (
-      setFilled(time !== '' && name !== '' && location !== '')
-   ), [time, name, location]);
-
-   const submit = () => {
-      auth.logout();
-      close();
-   };
-
+   // Function for closing the modal
    const closeModal = () => {
     close();
    }
 
+   // Changes the temperature measurement preference depending on
+   // which one the user chooses on the switch input.
    const onChange = (checked) => {
-        console.log(`switch to ${checked}`);
         if(checked) {
             preferences.changeToFahrenheit();
         } else {
@@ -41,22 +26,11 @@ const PreferencesSidebar = ({ close, complete }) => {
         }
     };
 
-   const getCoords = async address => {
-      const geocoder = new google.maps.Geocoder();
-      const res = await geocoder.geocode({address});
-
-      return {
-         lat: res.results[0].geometry.location.lat(),
-         lng: res.results[0].geometry.location.lng()
-      };
-   };
-
    return (
       <div class={style.modal}>
          <div class={style.container}>
             <div>
                <div class={style.control}>
-                  {/* <button class={style.cancel} type='button' onClick={close}>Cancel</button> */}
                   <button class={style.add} type='button' onClick={closeModal}><span class="material-symbols-outlined">close</span></button>
                </div>
 

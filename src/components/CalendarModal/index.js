@@ -4,28 +4,21 @@ import style from './style.css';
 
 const CalendarModal = ({ close, complete }) => {
    const [date, setDate] = useState('');
-
    const [filled, setFilled] = useState(false);
 
+   // Checks if the date input has been filled if so it
+   // sets the filled state attribute to true, otherwise
+   // it is set to false.
    useEffect(() => (
       setFilled(date !== '' && location !== '')
    ), [date, location]);
 
+   // Takes the user to the day they defined in the calendar
+   // input.
    const submit = () => {
-
       route('/timeline/' + date, true);
 
       close();
-   };
-
-   const getCoords = async address => {
-      const geocoder = new google.maps.Geocoder();
-      const res = await geocoder.geocode({address});
-
-      return {
-         lat: res.results[0].geometry.location.lat(),
-         lng: res.results[0].geometry.location.lng()
-      };
    };
 
    return (

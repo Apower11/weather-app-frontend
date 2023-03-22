@@ -6,19 +6,15 @@ import axios from 'axios';
 import style from './style.css';
 
 const Modal = ({ timestamp, close, timelineDate }) => {
+   // Takes a number that's defined as a string and turns it into a decimal
+   // number that's rounded to one decimal place.
+   const oneDecimal = temp => (
+      parseFloat(temp).toFixed(1)
+   );
 
-    const oneDecimal = temp => (
-        parseFloat(temp).toFixed(1)
-    );
-
-   const [filled, setFilled] = useState(false);
-
+   // Gets the preferences context along with it's attributes
+   // and their values.
    const preferences = useContext(PreferencesContext);
-
-   const submit = async () => {
-      console.log(246);
-      close();
-   };
 
    return (
       <div class={style.modal}>

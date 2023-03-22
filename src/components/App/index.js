@@ -17,6 +17,9 @@ function App() {
 	const { changeToCelsius, changeToFahrenheit, temperatureMeasurement } = usePreferences();
 	let routes;
 
+	// Loads the routes for the Preact App based on whether the user is logged
+	// in or not
+
 	if(!token) {
 		routes = (
 			<div class={style.app}>
@@ -47,29 +50,8 @@ function App() {
 		)
 	}
 
-	// routes = 
-	// (!token)
-	// ? (
-	// 	<div class={style.app}>
-	// 		<Layout>
-	// 			<Router>
-	// 				<Auth path="/login" />
-	// 				<Register path="/register" />
-	// 				<NotFound default />
-	// 			</Router>
-	// 		</Layout>
-	// 	</div>
-	// )
-	// : (
-	// 	<div class={style.app}>
-	// 		<Layout>
-	// 			<Router>
-	// 				<Timeline path="/timeline/:timelineDate?" />
-	// 				<Timeline default />
-	// 			</Router>
-	// 		</Layout>
-	// 	</div>
-	// )
+	// Returns the main app which is wrapped in an authentication context
+	// and a preferences context.
 
 	return (
 		<AuthContext.Provider 

@@ -11,22 +11,22 @@ import { usePreferences } from '../../shared/hooks/preferences-hook';
 import { useState, useEffect } from 'preact/hooks';
 
 const Timeline = ({timelineDate}) => {
+   // Gets the details of the logged in user, along with their login token
+   // and the login and logout functions from the useAuth() hook.
    const {token, login, logout, user} = useAuth();
+
+   // Defines state attributes and setters
    const [value, setValue] = useState("");
    const [timelineId, setTimelineId] = useState("");
-   const [events, setEvents] = useState([
-      { name: "Home",         time: { h: 7,  m: 15 }, coords: { lat: 51.54, lng: -0.13 } },
-      { name: "University",   time: { h: 9,  m: 0  }, coords: { lat: 51.54, lng: -0.13 } },
-      { name: "Riyadh",       time: { h: 12, m: 5  }, coords: { lat: 24.71, lng: 46.67 } },
-      { name: "Oslo",         time: { h: 12, m: 45 }, coords: { lat: 59.91, lng: 10.75 } },
-      { name: "Seoul",        time: { h: 22, m: 45 }, coords: { lat: 37.56, lng: 126.97 } }
-   ]);
    const [timestamps, setTimestamps] = useState([]);
-   const [displayedTimestamps, setDisplayedTimestamps] = useState([]);
    const [year, setYear] = useState('0');
    const [month, setMonth] = useState('None');
    const [monthNumber, setMonthNumber] = useState('0');
    const [day, setDay] = useState('0');
+   const [modal, setModal] = useState(false);
+   const [calendarModal, setCalendarModal] = useState(false);
+
+   // Gets the name of a month by the number passed in.
    const getMonthFromNumber = (monthNumber) => {
       let returnedMonth = '';
       switch(monthNumber){
@@ -71,6 +71,9 @@ const Timeline = ({timelineDate}) => {
       }
       return returnedMonth;
    }
+
+   // Sets the timeline date if it's not defined and also stores the day, month
+   // and year of the timeline date in the appropriate state variables.
    if(timelineDate){
       setYear(timelineDate.split('-')[0]);
       setMonthNumber(timelineDate.split('-')[1]);
@@ -90,12 +93,13 @@ const Timeline = ({timelineDate}) => {
       timelineDate = `${correctYear}-${correctMonthNumber}-${correctDay}`;
    }
 
+   // Creates a timeline for the logged in user on the current date the user is on
+   // if it doesn't exist, otherwise it just gets the existing timeline. Then it gets the ids
+   // for all the timestamps of that timeline.
    const getResponseData = async () => {
       let currentUserId = await user._id;
-      let returnedTimeline = null;
       if(user._id != undefined){
          const response = await axios.get(`${config.api}timeline/getTimeline/${user._id}/${timelineDate}`);
-         returnedTimeline = JSON.stringify(response.data.timeline);
          if(response.data.timeline == undefined){
             await axios.post(config.api + 'timeline/createTimeline', {
                date: timelineDate,
@@ -113,17 +117,18 @@ const Timeline = ({timelineDate}) => {
       }
    }
 
+   // Gets the necessary data for the timeline once this component renders.
    useEffect(() => {
       getResponseData();
    }, [value, timelineDate]);
 
    useEffect(() => {
       setValue("value");
-      setDisplayedTimestamps(timestamps);
    }, [timestamps])
 
+   // Takes the user to the day after the date of the current timeline, and then
+   // loads the timeline for that day.
    const goToNextDay = () => {
-      let dayNumber = parseInt(day);
       let currentDate = new Date( `${year}-${monthNumber}-${day}`);
       currentDate.setDate(currentDate.getDate() + 1);
       let correctDay = currentDate.getDate().toString().padStart(2, '0');
@@ -133,8 +138,9 @@ const Timeline = ({timelineDate}) => {
       route('/timeline/' + `${correctYear}-${correctMonth}-${correctDay}`, true);
    }
 
+   // Takes the user to the day before the date of the current timeline, and then
+   // loads the timeline for that day.
    const goToPreviousDay = () => {
-      let dayNumber = parseInt(day);
       let currentDate = new Date( `${year}-${monthNumber}-${day}`);
       currentDate.setDate(currentDate.getDate() - 1);
       let correctDay = currentDate.getDate().toString().padStart(2, '0');
@@ -143,9 +149,7 @@ const Timeline = ({timelineDate}) => {
       route('/timeline/' + `${correctYear}-${correctMonth}-${correctDay}`, true);
    }
 
-   const [modal, setModal] = useState(false);
-   const [calendarModal, setCalendarModal] = useState(false);
-
+   // Adds the timestamp (or event) to the timestamps of the current timeline.
    const addEvent = e => {
       const arr = [...timestamps, e._id];
       

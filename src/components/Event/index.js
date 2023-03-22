@@ -1,31 +1,19 @@
 import { useEffect, useState, useContext } from 'preact/hooks';
-import { usePreferences } from '../../shared/hooks/preferences-hook';
 import { PreferencesContext } from '../../shared/context/preferences-context';
 import parseWeatherCode from './parseCode';
 import TimestampDetails from '../TimestampDetails';
 import axios from 'axios';
 import style from './style.css';
 
-const api = 'https://api.open-meteo.com/v1/forecast';
-
-// fetch and json
-const jetch = async url => {
-   const res = await fetch(url);
-   return await res.json();
-};
-
-const formatTime = time => (
-   time.h.toString().padStart(2, '0') + ":" + time.m.toString().padStart(2, '0')
-);
-
+// Takes a number that's defined as a string and turns it into a decimal
+// number that's rounded to one decimal place.
 const oneDecimal = temp => (
    parseFloat(temp).toFixed(1)
 );
 
 const Event = ({ data, timelineDate }) => {
    let time = '11:15';
-   const { changeToCelsius, changeToFahrenheit, temperatureMeasurement } = usePreferences();
-   const [weather, setWeather] = useState({temp: data.temperature, ...parseWeatherCode(0, time)});
+   const [weather, setWeather] = useState({temp: "0.4", ...parseWeatherCode(0, time)});
    const [ready, setReady] = useState(false);
    const [value, setValue] = useState("");
    const [timestamp, setTimestamp] = useState({});
@@ -33,39 +21,23 @@ const Event = ({ data, timelineDate }) => {
 
    const preferences = useContext(PreferencesContext);
 
+   // Gets the details of the weather timestamp and stores them in the
+   // timestamp state attribute.
    const getWeatherTimestamp = async () => {
       const response = await axios.get(`https://weatherapp-group34-backend-api.herokuapp.com/timeline/getTimestamp/${data}`);
       setTimestamp(response.data.timestamp);
       setWeather({temp: response.data.timestamp.temperature, ...parseWeatherCode(response.data.timestamp.weatherCode, response.data.timestamp.time)})
    }
 
-   console.log(temperatureMeasurement);
-
    useEffect(() => {
       getWeatherTimestamp();
-      console.log(temperatureMeasurement);
    }, [value, data])
    setReady(true);
 
+   // Closes the timestamp modal which stores more details of timestamp.
    const closeTimestampModal = () => {
       setTimestampModal(false);
    }
-
-
-
-   
-
-   // useEffect(() => {
-   //    jetch(`${api}?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,weathercode`)
-   //       .then(e => {
-   //          setWeather({
-   //             temp: e.hourly.temperature_2m[time.h],
-   //             ...parseWeatherCode(e.hourly.weathercode[time.h], time)
-   //          });
-
-   //          setReady(true);
-   //       });
-   // }, [time, latitude, longitude]);
 
    if (!ready)
       return; // placeholder

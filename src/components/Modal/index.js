@@ -10,13 +10,16 @@ const Modal = ({ close, complete, timelineId, timelineDate }) => {
    const [showErrorMessage, setShowErrorMessage] = useState(false);
    const [errorMessage, setErrorMessage] = useState("");
 
+   const jetch = async url => {
+      const res = await fetch(url);
+      return await res.json();
+   };
+
+   // Uses the current date and date of the timeline to determine which
+   // specific api to use for getting the weather details.
    let theDate = new Date(timelineDate);
    let todaysDate = new Date(Date.now() - 604800000);
-   // todaysDate = Date.now();
    todaysDate.setHours(0,0,0,0);
-
-   console.log("Today's Date: " + todaysDate);
-   console.log("The Date: " + theDate);
 
    let api = 'https://api.open-meteo.com/v1/forecast';
 
@@ -26,31 +29,20 @@ const Modal = ({ close, complete, timelineId, timelineDate }) => {
       api = 'https://archive-api.open-meteo.com/v1/archive';
    }
 
-   console.log(api);
+   // Checks that all the inputs of the modal have been filled and
+   // only allows the user to submit their inputs if all input fields
+   // have been filled.
 
    const [filled, setFilled] = useState(false);
-
-   const jetch = async url => {
-      const res = await fetch(url);
-      return await res.json();
-   };
-   
-   const formatTime = time => (
-      time.h.toString().padStart(2, '0') + ":" + time.m.toString().padStart(2, '0')
-   );
-   
-   const oneDecimal = temp => (
-      parseFloat(temp).toFixed(1)
-   );
 
    useEffect(() => (
       setFilled(time !== '' && name !== '' && location !== '')
    ), [time, name, location]);
 
+   // Submit function which gets the weather details for a specific time and
+   // location and then submits those details as a Timestamp object to a
+   // MongoDB database.
    const submit = async () => {
-      const [h, m] = time.split(':');
-      console.log("Data 1: " + timelineId);
-
       getCoords(location).then(async coords => {
             jetch(`${api}?latitude=${coords.lat}&longitude=${coords.lng}&hourly=temperature_2m,weathercode&start_date=${timelineDate}&end_date=${timelineDate}`).then(async e => {
               await axios.post('https://weatherapp-group34-backend-api.herokuapp.com/timeline/createTimestamp', {
@@ -72,13 +64,13 @@ const Modal = ({ close, complete, timelineId, timelineDate }) => {
          });
          close();
          }).catch(err => {
-            console.log("Something went wrong!");
             setErrorMessage("The location you entered is invalid. Please try again by typing in a valid location address.");
             setShowErrorMessage(true);
          });
-      // complete({});
    };
 
+   // Gets the latitude and lognitude of a location based on a given
+   // name. This is known as Geocoding.
    const getCoords = async address => {
       const geocoder = new google.maps.Geocoder();
       const res = await geocoder.geocode({address});
