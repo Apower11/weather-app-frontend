@@ -152,11 +152,36 @@ const Timeline = ({timelineDate}) => {
       getResponseData();
    };
 
+   if (timestamps.length == 0) {
+      return (
+         <div class={style.timeline}>
+            <div class={style.connected}>
+               <div class={style.date}>
+                  <button onClick={() => goToPreviousDay()} class="material-symbols-outlined">chevron_left</button>
+                  <button class={style.calender} onClick={() => setCalendarModal(true)}>{day} {month} {year}</button>
+                  <button onClick={() => goToNextDay()} class="material-symbols-outlined">chevron_right</button>
+               </div>
+            </div>
+
+            <div class={style.connected}>
+               <span class={style.tutorial}>Create a new timeline below!</span>
+            </div>
+
+            <div class={style.connected}>
+               <button class={style.add} type='button' onClick={() => setModal(true)}>+</button>
+            </div>
+
+            {modal && <Modal close={() => setModal(false)} complete={addEvent} timelineId={timelineId} timelineDate={timelineDate} />}
+            {calendarModal && <CalendarModal close={() => setCalendarModal(false)} complete={addEvent} />}
+         </div>
+      );
+   }
+
    return (
       <div class={style.timeline}>
-         <div class={style.dateNavigator}>
+         <div class={style.connected}>
             <div class={style.left} />
-            <div class={style.container}>
+            <div class={style.date + ' ' + style.offset}>
                <button onClick={() => goToPreviousDay()} class="material-symbols-outlined">chevron_left</button>
                <button class={style.calender} onClick={() => setCalendarModal(true)}>{ day } { month } { year }</button>
                <button onClick={() => goToNextDay()} class="material-symbols-outlined">chevron_right</button>
@@ -166,9 +191,9 @@ const Timeline = ({timelineDate}) => {
          
          <Timestamps class={style.container} timestamps={timestamps} />
 
-         <div class={style.add}>
+         <div class={style.connected}>
             <div class={style.left} />
-            <button type='button' onClick={() => setModal(true)}>+</button>
+            <button class={style.add + ' ' + style.offset} type='button' onClick={() => setModal(true)}>+</button>
             <div class={style.right} />
          </div>
 
