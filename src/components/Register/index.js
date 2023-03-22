@@ -1,28 +1,28 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input } from 'antd';
 import { useContext, useState } from 'preact/hooks';
+import config from '../../config';
 import axios from 'axios';
 import style from './style.css';
 import { AuthContext } from '../../shared/context/auth-context';
 const Auth = () => {
+  // Gets the authentication context and all it's attributes along with
+  // their values.
   const auth = useContext(AuthContext);
 
+  // Registers a user in the database based on the email and password typed
+  // in by the user and then logs them in.
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-    axios.post("https://weatherapp-group34-backend-api.herokuapp.com/user/register", {
+    axios.post(config.api + "/user/register", {
         email: values.emailAddress,
         password: values.password
     }).then(res => {
-        console.log(res.data);
         auth.login(res.data.user._id, res.data.user, res.data.token);
     }).catch(err => {
         console.log(err);
     })
   };
-    
-  const [isLoginMode, setIsLoginMode] = useState(true);
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  
   return (
     <Form
       name="normal_login"
@@ -41,7 +41,7 @@ const Auth = () => {
           },
         ]}
       >
-        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email Address" />
+        <Input type="email" prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email Address" />
       </Form.Item>
       <Form.Item
         name="password"
@@ -72,7 +72,7 @@ const Auth = () => {
         <Button type="primary" htmlType="submit" className="login-form-button">
           Register
         </Button>
-        Or <a href="/login">login now!</a>
+        <span className={style.alternative_text}>Or <a href="/login">login now!</a></span>
       </Form.Item>
     </Form>
   );

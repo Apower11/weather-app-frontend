@@ -3,10 +3,13 @@ import { useState, useCallback, useEffect } from 'react';
 let logoutTimer;
 
 export const useAuth = () => {
-    const [token, setToken] = useState(false);
+  // Defines relevant state attributes and setters.
+  const [token, setToken] = useState(false);
   const [tokenExpirationDate, setTokenExpirationDate] = useState();
   const [user, setUser] = useState(false);
 
+  // Function for logging a user in by storing the user id, details and
+  // token in local storage.
   const login = useCallback((userId, user, token, expirationDate) => {
     setToken(token);
     setUser(user);
@@ -20,6 +23,7 @@ export const useAuth = () => {
      }));
   }, []);
 
+  // Logs the user out by removing all user data from local storage.
   const logout = useCallback(() => {
     setToken(null);
     setTokenExpirationDate(null);
@@ -27,6 +31,9 @@ export const useAuth = () => {
     localStorage.removeItem('userData');
   }, []);
 
+  // Checks if the user is logged in and if their token and token expiration date are
+  // defined. It then sets a timer to automatically log the user out aften the current time
+  // passes the token expiration date.
   useEffect(() => {
     if(token && tokenExpirationDate) {
       const remainingTime = tokenExpirationDate.getTime() - new Date().getTime();
@@ -36,6 +43,8 @@ export const useAuth = () => {
     }
   }, [token, logout, tokenExpirationDate])
 
+  // Checks if a user's data is stored in local storage and if it is it then
+  // automatically logs them in.
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem('userData'));
     if (

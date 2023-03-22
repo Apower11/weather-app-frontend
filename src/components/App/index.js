@@ -6,13 +6,19 @@ import Auth from '../Auth';
 import Register from '../Register';
 import Redirect from '../Redirect';
 import { AuthContext } from '../../shared/context/auth-context';
+import { PreferencesContext } from '../../shared/context/preferences-context';
 import { useAuth } from '../../shared/hooks/auth-hooks';
+import { usePreferences } from '../../shared/hooks/preferences-hook';
 import NotFound from '../404';
 import style from './style.css';
 
 function App() {
 	const {token, login, logout, user} = useAuth();
+	const { changeToCelsius, changeToFahrenheit, temperatureMeasurement } = usePreferences();
 	let routes;
+
+	// Loads the routes for the Preact App based on whether the user is logged
+	// in or not
 
 	if(!token) {
 		routes = (
@@ -44,29 +50,8 @@ function App() {
 		)
 	}
 
-	// routes = 
-	// (!token)
-	// ? (
-	// 	<div class={style.app}>
-	// 		<Layout>
-	// 			<Router>
-	// 				<Auth path="/login" />
-	// 				<Register path="/register" />
-	// 				<NotFound default />
-	// 			</Router>
-	// 		</Layout>
-	// 	</div>
-	// )
-	// : (
-	// 	<div class={style.app}>
-	// 		<Layout>
-	// 			<Router>
-	// 				<Timeline path="/timeline/:timelineDate?" />
-	// 				<Timeline default />
-	// 			</Router>
-	// 		</Layout>
-	// 	</div>
-	// )
+	// Returns the main app which is wrapped in an authentication context
+	// and a preferences context.
 
 	return (
 		<AuthContext.Provider 
@@ -76,9 +61,16 @@ function App() {
       user: user, 
       login: login, 
       logout: logout}}>
-      <React.StrictMode>
+      <PreferencesContext.Provider
+	  value={{
+		temperatureMeasurement: temperatureMeasurement,
+		changeToCelsius: changeToCelsius,
+		changeToFahrenheit: changeToFahrenheit
+	  }}>
+	  <React.StrictMode>
 	  {routes}
 	  </React.StrictMode>
+	  </PreferencesContext.Provider>
     </AuthContext.Provider>
 	)
 }

@@ -1,6 +1,7 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input } from 'antd';
 import { useContext, useState } from 'preact/hooks';
+import config from '../../config';
 import axios from 'axios';
 import style from './style.css';
 import { AuthContext } from '../../shared/context/auth-context';
@@ -8,7 +9,7 @@ const Auth = () => {
   const auth = useContext(AuthContext);
 
   const onFinish = (values) => {
-    axios.post("https://weatherapp-group34-backend-api.herokuapp.com/user/login", {
+    axios.post(config.api + "/user/login", {
         email: values.emailAddress,
         password: values.password
     }).then(res => {
@@ -39,7 +40,7 @@ const Auth = () => {
           },
         ]}
       >
-        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email Address" />
+        <Input prefix={<UserOutlined className="site-form-item-icon" />} type="email" placeholder="Email Address" />
       </Form.Item>
       <Form.Item
         name="password"
@@ -70,7 +71,7 @@ const Auth = () => {
         <Button type="primary" htmlType="submit" className="login-form-button">
           Log in
         </Button>
-        Or <a href="/register">register now!</a>
+        <span className={style.alternative_text}>Or <a href="/register">register now!</a></span>
       </Form.Item>
     </Form>
   );
